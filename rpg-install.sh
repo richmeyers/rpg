@@ -41,6 +41,20 @@ else packageinstallargs=
      installfrom="$delta"
 fi
 
+if expr "$1" : '.*\.gem' >/dev/null
+then file="$1"
+     test -r "$file" || {
+        warn "gem file can not be read: $file"
+        exit 1
+     }
+     rpg-unpack -cm "$file"       |
+     rpg-package-spec -           |
+     grep '^dependency: runtime ' |
+     cut -d ' ' -f 3-
+fi
+
+exit
+
 test -d "$sessiondir" || {
     trap "rm -rf '$sessiondir'" 0
     rpg-prepare -i -s "$session" "$@"
