@@ -46,7 +46,11 @@ ARGV.each do |file|
     if file =~ /\.gem$/
       `rpg unpack -cm '#{file}'`
     else
-      File.read(file)
+      if file == '-'
+        STDIN.read
+      else
+        File.read(file)
+      end
     end
   doc = YAML.load(yaml)
 
